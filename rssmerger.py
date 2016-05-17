@@ -5,18 +5,10 @@ import feedparser
 import http.server
 import socketserver
 import time
+import yaml
 from os import curdir, sep, path
 
 PORT = 8000
-urls = [
-    {
-        'url': "http://blog.kopis.de/feed.xml"
-    },
-    {
-        'url': "https://www.kopis.de/tt/public.php?op=rss&id=-2&view-mode=all_articles&key=af7d97f5762ec3f4de058ab70e53b30514d88857",
-        'prefix': 'Link: '
-    }
-]
 
 class RssRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -73,6 +65,10 @@ class RssRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(404)
 
         return
+
+# load feed configuration from file
+stream = open('feeds.yml')
+urls = yaml.load(stream)
 
 # serve via HTTP
 handler = RssRequestHandler
